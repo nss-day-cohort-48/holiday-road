@@ -1,19 +1,43 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import "./HolidayRoad.css"
-import { AgentList } from "./agents/AgentList";
-import { AgentProvider } from "./agents/AgentProvider";
+import { Login } from "./auth/Login"
+import { Route } from "react-router-dom"
+import { AuthProvider } from "./auth/AuthProvider"
+import { RequestProvider } from "./requests/RequestProvider"
+import { NavBar } from "./nav/NavBar";
+import { ApplicationViews } from "./ApplicationViews";
 
-export const HolidayRoad = () => (
-    <>
-        <h2>Holiday Road Travel Agency</h2>
-        <small>We'll get you there.</small>
-        <address>
-            <div>Visit us at our location</div>
-            <div>404 Unknown Drive</div>
-        </address>
 
-        <AgentProvider>
-            <AgentList />
-        </AgentProvider>
-    </>
-)
+const isUserAuthenticated = () => {
+    if (localStorage.getItem("holidayroad_user") !== null) {
+        return true
+    }
+
+    return false
+}
+
+export const HolidayRoad = () => {
+    const [isLoggedIn, setLoggedIn] = useState(isUserAuthenticated())
+
+    return (
+        <>
+            {
+                isLoggedIn
+                    ? (
+                        <>
+                            <NavBar setLoggedIn={setLoggedIn} />
+                            <ApplicationViews />
+                        </>
+                    )
+                    : (<Route>
+                        <AuthProvider>
+                            <Login setLoggedIn={setLoggedIn} />
+                        </AuthProvider>
+                    </Route>)
+            }
+
+
+
+        </>
+    )
+}
