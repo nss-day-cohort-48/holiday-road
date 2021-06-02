@@ -1,19 +1,29 @@
 import React from "react"
+import { NavBar } from "./nav/NavBar"
+import { Route, Redirect } from "react-router-dom"
+import { ApplicationViews } from "./ApplicationViews"
+import { Login } from "./auth/Login";
 import "./HolidayRoad.css"
-import { AgentList } from "./agents/AgentList";
-import { AgentProvider } from "./agents/AgentProvider";
 
 export const HolidayRoad = () => (
     <>
-        <h2>Holiday Road Travel Agency</h2>
-        <small>We'll get you there.</small>
-        <address>
-            <div>Visit us at our location</div>
-            <div>404 Unknown Drive</div>
-        </address>
+        <Route
+            render={() => {
+                if (localStorage.getItem("holidayroad_customer")) {
+                    return (
+                        <>
+                            <NavBar />
+                            <ApplicationViews />
+                        </>
+                    );
+                } else {
+                    return <Redirect to="/login" />;
+                }
+            }}
+        />
 
-        <AgentProvider>
-            <AgentList />
-        </AgentProvider>
+        <Route path="/login">
+            <Login />
+        </Route>
     </>
 )

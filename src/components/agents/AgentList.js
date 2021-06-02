@@ -17,7 +17,7 @@ export const AgentList = () => {
             {
                 agents.map(agentObject => {
                     return (
-                        <section className="agent">
+                        <section className="agent" key={agentObject.id}>
                             <h3 className="agent__name">{agentObject.name}</h3>
                         </section>
                     )
