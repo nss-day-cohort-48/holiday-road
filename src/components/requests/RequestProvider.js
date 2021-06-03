@@ -10,14 +10,20 @@ export const RequestProvider = (props) => {
 
     const getParks = () => {
         return fetch("https://developer.nps.gov/api/v1/parks?api_key=cYw6JZVFF0nCYMWzrMTDt1PSXeoknIHwVcjdWUZB&limit=500")
-        .then(res => res.json())
-        .then((response) => setParks(response.data))
+            .then(res => res.json())
+            .then((response) => setParks(response.data))
+    }
+
+    const getParkByCode = (parkCode) => {
+        return fetch(`https://developer.nps.gov/api/v1/parks?parkCode=${parkCode}&api_key=cYw6JZVFF0nCYMWzrMTDt1PSXeoknIHwVcjdWUZB&limit=500`)
+            .then(res => res.json())
+
     }
 
     const getRequests = () => {
-        return fetch("http://localhost:8088/requests")
-        .then(res => res.json())
-        .then((data) => setRequests(data))
+        return fetch(`http://localhost:8088/requests?customerId=${localStorage.getItem("holidayroad_customer")}`)
+            .then(res => res.json())
+            .then((data) => setRequests(data))
     }
 
     const addRequest = requestObj => {
@@ -28,13 +34,13 @@ export const RequestProvider = (props) => {
             },
             body: JSON.stringify(requestObj)
         })
-        .then(() => getRequests())
+            .then(() => getRequests())
     }
 
     return (
         <RequestContext.Provider value={
             {
-                requests, getRequests, addRequest, parks, getParks
+                requests, getRequests, addRequest, parks, getParks, getParkByCode
             }
         }>
             {props.children}

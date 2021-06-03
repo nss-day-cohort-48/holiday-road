@@ -1,7 +1,9 @@
 import React, { useContext, useEffect, useState } from "react"
+import { useHistory } from "react-router-dom";
 import { RequestContext } from "./RequestProvider";
 
 export const RequestForm = () => {
+    const history = useHistory()
     const { parks, getParks, addRequest } = useContext(RequestContext)
     const [userInput, setUserInput] = useState({
         customerId: 0,
@@ -14,15 +16,14 @@ export const RequestForm = () => {
 
     useEffect(
         () => {
-          getParks()
-          getRequests()
+            getParks()
         },
         []
     )
 
     const userProvidedInput = (event) => {
         const targetInputField = event.target.id
-        const copyOfState = {...userInput}
+        const copyOfState = { ...userInput }
         copyOfState[targetInputField] = event.target.value
         setUserInput(copyOfState)
     }
@@ -38,7 +39,11 @@ export const RequestForm = () => {
             adultCount: parseInt(userInput.adultCount),
             customerId: parseInt(localStorage.getItem("holidayroad_customer"))
         }
+
         addRequest(stateToMakePermanent)
+            .then(() => {
+                history.push("/requests")
+            })
     }
 
     return (
@@ -51,7 +56,7 @@ export const RequestForm = () => {
                         {
                             parks.map(
                                 park => {
-                                    return <option value={park.parkCode}>{park.name}</option>
+                                    return <option key={park.parkCode} value={park.parkCode}>{park.name}</option>
                                 }
                             )
                         }
@@ -63,7 +68,7 @@ export const RequestForm = () => {
                         onChange={(event) => userProvidedInput(event)}
                         id="start"
                         className="form-control"
-                        required  />
+                        required />
                 </fieldset>
                 <fieldset>
                     <label htmlFor="end"> End date </label>
@@ -71,7 +76,7 @@ export const RequestForm = () => {
                         onChange={(event) => userProvidedInput(event)}
                         id="end"
                         className="form-control"
-                        required  />
+                        required />
                 </fieldset>
                 <fieldset>
                     <label htmlFor="adultCount"> Number of adults </label>
@@ -79,15 +84,15 @@ export const RequestForm = () => {
                         onChange={(event) => userProvidedInput(event)}
                         id="adultCount"
                         className="form-control"
-                        required  />
+                        required />
                 </fieldset>
                 <fieldset>
                     <label htmlFor="kidCount"> Number of children </label>
-                    <input  type="number"
+                    <input type="number"
                         onChange={(event) => userProvidedInput(event)}
                         id="kidCount"
                         className="form-control"
-                        required  />
+                        required />
                 </fieldset>
 
                 <button type="submit">Send Request</button>
